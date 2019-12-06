@@ -1,11 +1,18 @@
 @use 'resets';
 
 table {
-  background: #cecece;
+  tr:nth-child(2n - 1) {
+    background: #cecece;
+  }
 
   th {
     padding: 10px;
+    font-weight: bold;
     border-top: 1px #000 solid;
     border-bottom: 1px #000 solid;
+  }
+
+  td {
+    padding: 10px;
   }
 }
