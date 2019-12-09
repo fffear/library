@@ -55,6 +55,7 @@ function render() {
     myLibrary.forEach(function(book) {
       // create 'tr' in memory
       let row = document.createElement("tr");
+      row.setAttribute("data-library-index", `${myLibrary.indexOf(book)}`);
 
       // Iterate over properties of book object
       for (let prop in book) {
@@ -68,6 +69,10 @@ function render() {
           row.appendChild(table_data);
         }
       }
+
+      // Remove book button
+      addRemoveBookBtn(book, row);
+
       // Append 'tr' to 'table' to render in html
       table.appendChild(row);
     });
@@ -91,7 +96,7 @@ function createModalForm() {
   createTextInput("Title", "text", "title", "title", "Title");
   createTextInput("Author", "text", "author", "author", "Author");
   createTextInput("No_of_pages", "number", "no_of_pages", "no_of_pages", "No_of_pages");
-  createReadStatusDropdown("Read", "Not Read");
+  createReadStatusDropdown("Read", "Not Read Yet");
 
   let btnContainer = document.createElement("div");
   btnContainer.classList.add("btnContainer");
@@ -115,12 +120,13 @@ function createModalForm() {
   
   background.appendChild(form);
 
+  // Cancel out of form
   cancelBtn.addEventListener("click", e => {
     body.removeChild(background);
     body.style.overflow = "visible";
   });
 
-  // 
+  // Add Book if data valid
   addBookBtn.addEventListener("click", e => {
     if (!checkValidFormData()) {
       e.preventDefault();
@@ -208,6 +214,7 @@ function createModalForm() {
     let row = document.createElement("tr");
 
     let latestBook = myLibrary[myLibrary.length - 1];
+    row.setAttribute("data-library-index", `${myLibrary.indexOf(latestBook)}`)
 
     // Iterate over properties of book object
     for (let prop in latestBook) {
@@ -222,6 +229,9 @@ function createModalForm() {
       }
     }
 
+    // Remove book button
+    addRemoveBookBtn(latestBook, row);
+
     // Append 'tr' to 'table' to render in html
     table.appendChild(row);
 
@@ -232,11 +242,33 @@ function createModalForm() {
   }
 }
 
+function addRemoveBookBtn(book, row) {
+  // Remove book button
+  let table_data = document.createElement("td");
+  let removeBookBtn = document.createElement("button");
+  removeBookBtn.textContent = "Remove Book";
+  removeBookBtn.setAttribute("data-library-index", `${myLibrary.indexOf(book)}`);
+  table_data.appendChild(removeBookBtn);
+  row.appendChild(table_data);
+
+  removeBookBtn.addEventListener("click", e => {
+    removeBookFromLibrary(e);
+    removeBookBtn.removeEventListener("click", removeBookFromLibrary);
+  });
+}
+
+function removeBookFromLibrary(e) {
+  let bookIndex = Number(e.target.attributes[0].value);
+  myLibrary.splice(bookIndex, 1);
+  let deletedBook = document.querySelector(`tr[data-library-index="${bookIndex}"]`);
+  table.removeChild(deletedBook);
+}
+
 // Add random books
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 295, "not read yet");
-addBookToLibrary("The 48 Laws of Power", "Robert Greene", 480, "not read yet");
-addBookToLibrary("The Prince", "Niccolo Machiavelli", 112, "not read yet");
-addBookToLibrary("Tides of War", "Steven Pressfield", 448, "not read yet");
+addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 295, "Not Read Yet");
+addBookToLibrary("The 48 Laws of Power", "Robert Greene", 480, "Not Read Yet");
+addBookToLibrary("The Prince", "Niccolo Machiavelli", 112, "Not Read Yet");
+addBookToLibrary("Tides of War", "Steven Pressfield", 448, "Not Read Yet");
 
 // Display in console
 console.log(myLibrary);
