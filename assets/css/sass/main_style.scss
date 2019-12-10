@@ -1,36 +1,49 @@
 // @use 'resets';
-// 
-// table {
-//   tr:nth-child(2n - 1) {
-//     background: #cecece;
-//   }
-// 
-//   th {
-//     padding: 10px;
-//     font-weight: bold;
-//     border-top: 1px #000 solid;
-//     border-bottom: 1px #000 solid;
-//   }
-// 
-//   td {
-//     padding: 10px;
-//   }
-// }
+
+
+header {
+  background: #212529;
+  color: white;
+}
+
+table {
+  margin: 16px 0 0 16px;
+
+  tr:nth-child(2n - 1) {
+    background: #cecece;
+  }
+
+  th {
+    padding: 10px;
+    font-weight: bold;
+    border-top: 1px #000 solid;
+    border-bottom: 1px #000 solid;
+  }
+
+  td {
+    padding: 10px;
+  }
+}
+
+
+#new_book_btn {
+  margin: 16px 0 0 16px;
+}
 
 .modalFormBackground {
   display: flex;
-  color: white;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #212529;
+  background-color: rgba(25, 25, 25, 0.5);
   position: fixed;
   left: 0;
   top: 0;
   right: 0;
-  opacity: 0.5;
 
   form {
+    background-color: rgb(219, 219, 219);
+    padding: 1rem;
 
     label {
       display: block;
@@ -51,5 +64,4 @@
  
     }
   }
-
 }
