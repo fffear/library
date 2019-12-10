@@ -6,9 +6,6 @@ function Book(title, author, pages, read) {
   this.author = author
   this.pages = pages
   this.read = read
-  this.info = function() {
-    return `${this.title} by ${this.author}, ${this.pages} pages, ${this.read}`;
-  }
 }
 
 // Function to add new book to library
@@ -65,10 +62,17 @@ function render() {
           let table_data = document.createElement("td");
           table_data.textContent = book[prop];
 
+          if (prop == "read") {
+            table_data.classList.add(`read-status-${myLibrary.indexOf(book)}`);
+          }
+
           // Append 'td' to 'tr'
           row.appendChild(table_data);
         }
       }
+
+      // Change Read Status
+      addChangeReadStatusBtn(book, row);
 
       // Remove book button
       addRemoveBookBtn(book, row);
@@ -161,16 +165,9 @@ function createModalForm() {
     e.preventDefault();
 
     let new_title = document.querySelector("#title");
-    console.log(new_title.value);
-
     let new_author = document.querySelector("#author");
-    console.log(new_author.value);
-
     let new_no_of_pages = document.querySelector("#no_of_pages");
-    console.log(new_no_of_pages.value);
-
     let read_status = document.querySelector("#read_status");
-    console.log(read_status.value);
 
     addBookToLibrary(new_title.value, new_author.value, Number(new_no_of_pages.value), read_status.value);
   }
@@ -224,10 +221,17 @@ function createModalForm() {
         let table_data = document.createElement("td");
         table_data.textContent = latestBook[prop];
 
+        if (prop == "read") {
+          table_data.classList.add(`read-status-${myLibrary.indexOf(latestBook)}`);
+        }
+
         // Append 'td' to 'tr'
         row.appendChild(table_data);
       }
     }
+
+    // Change Read Status button
+    addChangeReadStatusBtn(latestBook, row);
 
     // Remove book button
     addRemoveBookBtn(latestBook, row);
@@ -262,6 +266,39 @@ function removeBookFromLibrary(e) {
   myLibrary.splice(bookIndex, 1);
   let deletedBook = document.querySelector(`tr[data-library-index="${bookIndex}"]`);
   table.removeChild(deletedBook);
+}
+
+function renderToggledReadStatus(e) {
+  let bookIndex = Number(e.target.attributes[0].value);
+  myLibrary[bookIndex].toggleReadStatus();
+  let toggledReadStatus = document.querySelector(`.read-status-${bookIndex}`);
+  toggledReadStatus.textContent = myLibrary[bookIndex].read;
+}
+
+function addChangeReadStatusBtn(book, row) {
+  // Change Read Status button
+  let table_data = document.createElement("td");
+  let changeReadStatusBtn = document.createElement("button");
+  changeReadStatusBtn.textContent = "Change Read Status";
+  changeReadStatusBtn.setAttribute("data-read-status-index", `${myLibrary.indexOf(book)}`);
+  table_data.appendChild(changeReadStatusBtn);
+  row.appendChild(table_data);
+
+  changeReadStatusBtn.addEventListener("click", e => {
+    renderToggledReadStatus(e);
+  });
+}
+
+Book.prototype.toggleReadStatus = function() {
+  if (this.read == "Read") {
+    this.read = "Not Read Yet";
+  } else {
+    this.read = "Read";
+  }
+}
+
+Book.prototype.info = function() {
+  return `${this.title} by ${this.author}, ${this.pages} pages, ${this.read}`;
 }
 
 // Add random books
